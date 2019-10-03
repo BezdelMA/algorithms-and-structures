@@ -3,6 +3,7 @@
 #include <time.h>
 #pragma warning(disable : 4996)
 
+
 //Функция заполнения массива псевдослучайными числами
 void Input(int* mass, int len)
 {
@@ -50,7 +51,7 @@ void ComparisonOptimal(int* mass, int len, int* count)
 	}
 }
 
-//Функция шейкер-сортировки
+//Функция Shaker Sort
 //Изучал только словестное описание способа сортировки. В код переводил самостоятельно
 //Буду рад замечаниям по написанию кода
 void Shaker(int* mass, int len, int* count)
@@ -156,7 +157,7 @@ int main()
 	printf("\nКоличество операций при выполнении ОПТИМИЗИРОВАННОЙ сортировки: %d", count);
 	printf("\n\n");
 
-	//Шейкер-сортировка
+	//Shaker Sort
 	count = 0;
 	int* massShaker[30];
 	Enter(mass, len, massShaker);
