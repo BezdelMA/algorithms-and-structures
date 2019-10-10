@@ -33,35 +33,7 @@ struct Stack
 };
 struct Stack Stack, StackCopy;
 
-void Copy(char value)
-{
-	if (StackCopy.size >= StackCopy.maxSize)
-	{
-		printf("StackCopy is all, sorry");
-		return;
-	}
-
-	Node *tmp = (Node*)malloc(sizeof(Node));
-	tmp->value = value;
-	tmp->next = StackCopy.head;
-	StackCopy.head = tmp;
-	StackCopy.size++;
-}
-
-void PushQueue(char value)
-{
-	if (Queue.size_2 >= Queue.maxSize_2)
-	{
-		printf("Stack is all, sorry");
-		return;
-	}
-	Node_2* temp = (Node_2*)malloc(sizeof(Node_2));
-	temp->value = value;
-	temp->next = Queue.tail;
-	temp->prev = Queue.head;
-	Queue.tail= temp;
-}
-
+//Добавление нового элемента в Stack
 void Push(char value)
 {
 	if (Stack.size >= Stack.maxSize)
@@ -77,6 +49,7 @@ void Push(char value)
 	Stack.size++;
 }
 
+//Удаление последнего пришедшего элемента в Stack
 char Pop()
 {
 	if (Stack.size == 0)
@@ -95,16 +68,7 @@ char Pop()
 	return value;
 }
 
-void PrintQueue(struct Queue Queue)
-{
-	Node *current = Queue.head;
-	while (current != NULL)
-	{
-		printf("%c ", current->value);
-		current = current->next;
-	}
-}
-
+//Вывод на экран Stack
 void PrintStack(struct Stack Stack)
 {
 	Node *current = Stack.head;
@@ -115,12 +79,61 @@ void PrintStack(struct Stack Stack)
 	}
 }
 
+//Вспомогательная функция копирования из одного списка в другой
+void Copy(char value)
+{
+	if (StackCopy.size >= StackCopy.maxSize)
+	{
+		printf("StackCopy is all, sorry");
+		return;
+	}
+
+	Node* tmp = (Node*)malloc(sizeof(Node));
+	tmp->value = value;
+	tmp->next = StackCopy.head;
+	StackCopy.head = tmp;
+	StackCopy.size++;
+}
+
+//Копирование из одного списка в другой
 void CopyStack(struct Stack Stack, struct Stack StackCopy)
 {
 	Node *current = Stack.head;
 	while (current != NULL)
 	{
 		Copy(current->value);
+		current = current->next;
+	}
+}
+
+//Добавление нового элемента в очередь Queue
+void PushQueue(char value)
+{
+	if (Queue.size_2 >= Queue.maxSize_2)
+	{
+		printf("Queue is all, sorry");
+		return;
+	}
+	Node_2* temp = (Node_2*)malloc(sizeof(Node_2));
+	temp->value = value;
+	temp->next = NULL;
+	temp->prev = Queue.tail;
+	if (Queue.tail)
+		Queue.tail->next = temp;
+	Queue.tail = temp;
+	if (Queue.head == NULL)
+		Queue.head = temp;
+
+	Queue.size_2++;
+}
+
+//Вывод на экран очереди Queue
+void PrintQueue(struct Queue Queue)
+{
+	Node_2* current = Queue.head;
+	while (current != NULL)
+	{
+		printf("%c ", current->value);
 		current = current->next;
 	}
 }
@@ -150,6 +163,7 @@ int main(int argc, char *argv[])
 	PrintStack(StackCopy);
 #pragma endregion
 	
+#pragma region Создание очереди на основе двусвязного списка
 	printf("\nСоздание структуры Queue на основе двусвязного списка. Вывод данных: \n\n");
 	Queue.tail = NULL;
 	Queue.maxSize_2 = 10;
@@ -161,5 +175,8 @@ int main(int argc, char *argv[])
 	PushQueue('i');
 	PushQueue('l');
 	PrintQueue(Queue);
+
+#pragma endregion
+
 	return 1;
 }
