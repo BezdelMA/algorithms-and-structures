@@ -10,6 +10,22 @@ struct TNode
 };
 typedef struct TNode Node;
 
+struct TNode_2
+{
+	char value;
+	struct TNode_2* next;
+	struct TNode_2* prev;
+};
+typedef struct TNode_2 Node_2;
+
+struct Queue
+{
+	struct TNode_2* head;
+	struct TNode_2* tail;
+	int size_2, maxSize_2;
+};
+struct Queue Queue;
+
 struct Stack
 {
 	Node *head;
@@ -30,6 +46,20 @@ void Copy(char value)
 	tmp->next = StackCopy.head;
 	StackCopy.head = tmp;
 	StackCopy.size++;
+}
+
+void PushQueue(char value)
+{
+	if (Queue.size_2 >= Queue.maxSize_2)
+	{
+		printf("Stack is all, sorry");
+		return;
+	}
+	Node_2* temp = (Node_2*)malloc(sizeof(Node_2));
+	temp->value = value;
+	temp->next = Queue.tail;
+	temp->prev = Queue.head;
+	Queue.tail= temp;
 }
 
 void Push(char value)
@@ -65,6 +95,16 @@ char Pop()
 	return value;
 }
 
+void PrintQueue(struct Queue Queue)
+{
+	Node *current = Queue.head;
+	while (current != NULL)
+	{
+		printf("%c ", current->value);
+		current = current->next;
+	}
+}
+
 void PrintStack(struct Stack Stack)
 {
 	Node *current = Stack.head;
@@ -89,8 +129,9 @@ int main(int argc, char *argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+#pragma region Создание Стека и копирование в другой односвязный список Стека
 	printf("Создание структуры Stack на основе односвязаного списка. Вывод данных: \n");
-	Stack.maxSize = 100;
+	Stack.maxSize = 10;
 	Stack.head = NULL;
 	Push('M');
 	Push('i');
@@ -106,7 +147,19 @@ int main(int argc, char *argv[])
 	StackCopy.maxSize = Stack.maxSize;
 	StackCopy.head = NULL;
 	CopyStack(Stack, StackCopy);
-
 	PrintStack(StackCopy);
+#pragma endregion
+	
+	printf("\nСоздание структуры Queue на основе двусвязного списка. Вывод данных: \n\n");
+	Queue.tail = NULL;
+	Queue.maxSize_2 = 10;
+	PushQueue('M');
+	PushQueue('i');
+	PushQueue('k');
+	PushQueue('h');
+	PushQueue('a');
+	PushQueue('i');
+	PushQueue('l');
+	PrintQueue(Queue);
 	return 1;
 }
