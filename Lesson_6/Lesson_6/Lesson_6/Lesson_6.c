@@ -57,27 +57,43 @@ TNode* tree_2(TNode* parent, int temp)
 	return node;
 }
 
-TNode* InputTree(TNode* node)
+TNode* InputTree(TNode* node, int temp)
 {
-	int temp = arr[i];
-	if (node == NULL)
+	TNode* tmp = NULL, * right = NULL, * left = NULL;
+	
+	//i++;
+	if (node == 0)
 		node = tree_2(NULL, temp);
-	while (node->data)
-	{
+	
+		temp = arr[i+1];
+		tmp = tree_2(node, temp);
 		if (node->data > temp)
-			if (node->left)
-				node->data = node->right;
+			//налево
+		{
+			if (node->left == NULL)
+			{
+				node->left = tmp;
+				node->left->parent = node;
+			}
 			else
-				node->left = tree_2(node->data, temp);
-		else if (node->data < temp)
-			if (node->right)
-				node->data = node->right;
+				InputTree(node->left, temp);
+		}
+
+		else //направо
+		{
+			if (node->right == NULL)
+			{
+				node->right = tmp;
+				node->right->parent = node;
+			}
 			else
-				node->right = tree_2(node->data, temp);
-		if (i < 10)
-			temp = arr[++i];
-		else break;
-	}
+				InputTree(node->right, temp);
+		}
+		i++;
+		
+		if (i < 9)
+			InputTree(node, arr[i]);
+	
 	return node;
 }
 
@@ -154,7 +170,9 @@ int main()
 	printf("\n\n");
 	postOrderTravers(t);
 
+	printf("\n\n");
 	i = 0;
-	TNode* t_2 = InputTree(NULL);
+	TNode* t_2 = InputTree(NULL, arr[0]);
 	preOrderTravers(t_2);
+	return 1;
 }
