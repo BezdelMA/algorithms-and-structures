@@ -64,8 +64,9 @@ TNode* InputTree(TNode* node, int temp)
 	//i++;
 	if (node == 0)
 		node = tree_2(NULL, temp);
-	
-		temp = arr[i+1];
+	while (node)
+	{
+		temp = arr[i + 1];
 		tmp = tree_2(node, temp);
 		if (node->data > temp)
 			//налево
@@ -74,6 +75,8 @@ TNode* InputTree(TNode* node, int temp)
 			{
 				node->left = tmp;
 				node->left->parent = node;
+				if (i > 0)
+					return node;
 			}
 			else
 				InputTree(node->left, temp);
@@ -85,15 +88,20 @@ TNode* InputTree(TNode* node, int temp)
 			{
 				node->right = tmp;
 				node->right->parent = node;
+				if (i > 0)
+					return node;
 			}
 			else
+			{
 				InputTree(node->right, temp);
+			}
 		}
 		i++;
-		
+
 		if (i < 9)
 			InputTree(node, arr[i]);
-	
+		else break;
+	}
 	return node;
 }
 
