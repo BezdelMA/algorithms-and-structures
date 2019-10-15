@@ -17,7 +17,7 @@ int MakeHash(char str[100])
 
 int arr[10] = { 16, 18, 63, 11, 19, 64, 15, 77, 84, 14 };
 int a = sizeof(arr) / sizeof(int);
-int i = 0, l = 0, r = 0;
+int i = 0;
 
 typedef struct TNode
 {
@@ -26,103 +26,6 @@ typedef struct TNode
 	struct TNode* right;
 	struct TNode* parent;
 } TNode;
-
-typedef struct Students
-{
-	int id;
-	char* name;
-	int age;
-	struct Students* left;
-	struct Students* right;
-	struct Students* parent;
-}Students;
-
-Students* searchNAME;
-
-Students* newStudents(Students* parent, int id, char* name, int age)
-{
-	Students* students = (Students*)malloc(sizeof(Students));
-	students->id = id;
-	students->name = name;
-	students->age = age;
-	students->parent = parent;
-	students->right = NULL;
-	students->left = NULL;
-	return students;
-}
-
-Students* Push(Students* students, int id, char* name, int age)
-{
-	if (students == NULL)
-	{
-		students = newStudents(students, id, name, age);
-		return students;
-	}
-	if (students->id > id)
-	{
-		if (students->left != NULL)
-			Push(students->left, id, name, age);
-		else
-		{
-			students->left = newStudents(students, id, name, age);
-			students->left->left = NULL;
-			students->left->right = NULL;
-		}
-	}
-	else
-	{
-		if (students->right != NULL)
-			Push(students->right, id, name, age);
-		else
-		{
-			students->right = newStudents(students, id, name, age);
-			students->right->left = NULL;
-			students->right->right = NULL;
-		}
-	}
-	return students;
-}
-
-Students* SearchID(Students* students, int id)
-{
-	if (students == NULL)
-		return NULL;
-	while (students)
-	{
-		if (students->id == id)
-		{
-			students->left = NULL;
-			students->right == NULL;
-			students->parent = NULL;
-			return students;
-		}
-		if (students->id > id)
-			return SearchID(students->left, id);
-		else
-			return SearchID(students->right, id);
-	}
-}
-
-Students* SearchNAME(Students* students, char* name)
-{
-	if (students == NULL)
-		return NULL;
-	if (strcmp(students->name, name) == 0)
-	{
-		students->left = NULL;
-		students->right == NULL;
-		students->parent = NULL;
-		return students;
-	}
-	if (students->left || students->right)
-	{
-		if (students->left)
-			SearchNAME(students->left, name);
-		if (students->right)
-			SearchNAME(students->right, name);
-	}
-}
-
 //Input tree
 TNode* tree(int a, TNode* parent)
 {
@@ -248,7 +151,7 @@ void postOrderTravers(TNode* root)
 	if (root)
 	{
 		printf("(");
-		if(root->left)
+		if (root->left)
 		{
 			postOrderTravers(root->left);
 		}
@@ -261,6 +164,127 @@ void postOrderTravers(TNode* root)
 		printf("%d", root->data);
 		printf(")");
 	}
+}
+
+
+typedef struct Students
+{
+	int id;
+	char* name;
+	int age;
+	struct Students* left;
+	struct Students* right;
+	struct Students* parent;
+}Students;
+
+Students* search;
+Students* searchA;
+
+Students* newStudents(Students* parent, int id, char* name, int age)
+{
+	Students* students = (Students*)malloc(sizeof(Students));
+	students->id = id;
+	students->name = name;
+	students->age = age;
+	students->parent = parent;
+	students->right = NULL;
+	students->left = NULL;
+	return students;
+}
+
+Students* Push(Students* students, int id, char* name, int age)
+{
+	if (students == NULL)
+	{
+		i++;
+		students = newStudents(students, id, name, age);
+		return students;
+	}
+	if (students->id > id)
+	{
+		if (students->left != NULL)
+			Push(students->left, id, name, age);
+		else
+		{
+			i++;
+			students->left = newStudents(students, id, name, age);
+			students->left->left = NULL;
+			students->left->right = NULL;
+		}
+	}
+	else
+	{
+		if (students->right != NULL)
+			Push(students->right, id, name, age);
+		else
+		{
+			i++;
+			students->right = newStudents(students, id, name, age);
+			students->right->left = NULL;
+			students->right->right = NULL;
+		}
+	}
+	return students;
+}
+
+Students* SearchID(Students* students, int id)
+{
+	if (students == NULL)
+		return NULL;
+	while (students)
+	{
+		if (students->id == id)
+		{
+			students->left = NULL;
+			students->right == NULL;
+			students->parent = NULL;
+			return students;
+		}
+		if (students->id > id)
+			return SearchID(students->left, id);
+		else
+			return SearchID(students->right, id);
+	}
+}
+
+Students* SearchNAME(Students* students, char* name)
+{
+	if (students == NULL)
+		return NULL;
+	if (strcmp(students->name, name) == 0)
+	{
+		students->left = NULL;
+		students->right == NULL;
+		students->parent = NULL;
+		return students;
+	}
+	if (students->left != NULL || students->right != NULL)
+	{
+		if (students->left != NULL)
+			search = SearchNAME(students->left, name);
+		return (search) ? search : SearchNAME(students->right, name);
+	}
+	else return NULL;
+}
+
+Students* SearchAGE(Students* students, int age)
+{
+	if (students == NULL)
+		return NULL;
+	if (students->age == age)
+	{
+		students->left = NULL;
+		students->right = NULL;
+		students->parent = NULL;
+		return students;
+	}
+	if (students->left || students->right)
+	{
+		if (students->left)
+			searchA = SearchAGE(students->left, age);
+		return (searchA) ? searchA : SearchAGE(students->right, age);
+	}
+	return NULL;
 }
 
 int main()
@@ -297,7 +321,9 @@ int main()
 #pragma region Search in the tree by value
 TNode* search = Search(t_2, 11);
 #pragma endregion
-
+	
+#pragma region DataBese Students
+	i = 0;
 	Students* st = NULL;
 	st = Push(st, 40, "Mikhail", 25);
 	Push(st, 17, "Anna", 28);
@@ -313,9 +339,10 @@ TNode* search = Search(t_2, 11);
 	Push(st, 43, "Petr", 41);
 	Push(st, 2, "Aleksey", 18);
 
-	searchNAME = SearchNAME(st, "Anna");
-	Students* searchID = SearchID(st, 18);
-	//Students* searchAGE = SerachAGE(st, 34);
+	Students* searchID = SearchID(st, 29);
+	Students* searchNAME = SearchNAME(st, "Petr");
+	Students* searchAGE = SearchAGE(st, 16);
+#pragma endregion
 
 	return 1;
 }
