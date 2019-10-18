@@ -4,19 +4,20 @@
 
 #pragma warning(disable : 4996)
 
-int mass[6][6] = {
-		{0,1,1,1,1,0},
-		{1,0,0,0,1,0},
-		{1,0,0,1,0,1},
-		{1,0,1,0,0,1},
-		{1,1,0,0,0,0},
-		{0,0,1,1,0,0}
+int mass[7][7] = {
+		{0,1,1,1,1,1,0},
+		{1,0,0,0,1,0,1},
+		{1,0,0,1,0,1,0},
+		{1,0,1,0,0,1,1},
+		{1,1,0,0,0,0,0},
+		{1,0,1,1,0,0,0},
+		{0,1,0,1,0,0,0}
 	};
-int spent[6] = { 0 };
-int spentStack[6] = { 0 };
-int spentStack_2[6] = { 0 };
+int spent[7] = { 0 };
+int spentStackRecurs[7] = { 0 };
+int spentStack_2[7] = { 0 };
 int j, k = 0;
-int jMax = 6;
+int jMax = 7;
 
 typedef struct Node
 {
@@ -26,10 +27,10 @@ typedef struct Node
 }Node;
 
 Node* queue;
-Node* stack;
+Node* stackRecurs;
 Node* stack_2;
 Node* result;
-Node* resultStack;
+Node* resultStackRecurs;
 Node* resultStack_2;
 
 Node* Push(Node* queue, int data)
@@ -82,13 +83,13 @@ int PopStack(Node* stack)
 {
 	Node* temp = (Node*)malloc(sizeof(Node));
 	if (stack->next)
-		temp->data = PopStack(stack->next);
+		temp = PopStack(stack->next);
 	else
 	{
 		temp->data = stack->data;
 		temp->next = temp->parent = NULL;
 	}
-	return temp->data;
+	return temp;
 }
 
 void PrintQueue(Node* queue)
@@ -139,25 +140,26 @@ void byPassWidth(int i)
 	}
 }
 
-void byPassDepth(int i)
+void byPassDepthRecurs(int i)
 {
-	if (spentStack[i] == 0)
+	if (spentStackRecurs[i] == 0)
 	{
-		spentStack[i] = 1;
-		resultStack = Push(resultStack, i);
+		spentStackRecurs[i] = 1;
+		resultStackRecurs = Push(resultStackRecurs, i);
 		for (j = 0; j < jMax; j++)
 		{
 			if (mass[i][j] == 1)
-				if (spentStack[j] == 0)
-					stack = Push(stack, j);
+				if (spentStackRecurs[j] == 0)
+					stackRecurs = Push(stackRecurs, j);
 		}
-		if (stack)
+		if (stackRecurs)
 		{
-			byPassDepth(PopStack(stack->next));
+			Node* temp = PopStack(stackRecurs);
+			byPassDepthRecurs(temp->data);
 			return;
 		}
 	}
-	stack = PopStack(stack);
+	stackRecurs = PopStack(stackRecurs);
 }
 
 void byPassDepth_2(int i)
@@ -179,8 +181,9 @@ void byPassDepth_2(int i)
 			break;
 		else
 		{
-			i = PopStack(stack_2->next);
-			stack = Pop(stack_2);
+			Node* temp = PopStack(stack_2->next);
+			i = temp->data;
+			stack_2 = PopStack(stack_2);
 		}
 	}
 }
@@ -190,8 +193,8 @@ int main()
 	byPassWidth(1);
 	PrintQueue(result);
 	printf("\n\n");
-	byPassDepth(1);
-	PrintQueue(resultStack);
+	byPassDepthRecurs(1);
+	PrintQueue(resultStackRecurs);
 	printf("\n\n");
 	byPassDepth_2(1);
 	PrintQueue(resultStack_2);
